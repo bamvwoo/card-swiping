@@ -7,8 +7,8 @@ window.onload = function() {
     const rect = wrapper.getBoundingClientRect();
 
     const range = {
-        from: rect.left + (wrapper.offsetWidth / 4),
-        to: rect.right - (wrapper.offsetWidth / 4)
+        from: rect.left + (wrapper.offsetWidth / 3),
+        to: rect.right - (wrapper.offsetWidth / 3)
     }
 
     wrapper.addEventListener('mousedown', function(e) {
@@ -75,18 +75,22 @@ const swipeCard = (e) => {
             // 카드 위치 업데이트
             cardPosition.x += direction.x * acceleration * speedFactor;
             cardPosition.y += direction.y * acceleration * speedFactor;
+
+            const cardRect = card.getBoundingClientRect();
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
             
+            if (cardRect.right < 0 || cardRect.left > screenWidth || cardRect.bottom < 0 || cardRect.top > screenHeight) {
+                // 화면을 벗어난 경우 애니메이션 종료
+                clearInterval(animationInterval);
+                card.style.display = 'none'; // 카드 숨기기
+            }
+
             // 카드 위치 적용
             card.style.left = cardPosition.x + 'px';
             card.style.top = cardPosition.y + 'px';
-            
-            // 속도를 감소시킴으로써 애니메이션을 서서히 멈추도록 함
-            speedFactor *= 0.9;
-            
-            // 속도가 일정 값 이하로 떨어지면 애니메이션 종료
-            if (speedFactor < 0.5) {
-                clearInterval(animationInterval);
-            }
+
+            speedFactor *= 0.99; // 속도 감속
         }
         
         // 일정 시간마다 카드 애니메이션 함수 호출하여 애니메이션 실행
