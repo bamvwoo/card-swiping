@@ -82,7 +82,7 @@ li {
     position: relative;
 }
 
-.card {
+.card-item {
     position: absolute;
     width: 300px;
     height: 350px;
